@@ -1,0 +1,4 @@
+All data is in the form:
+Pairs 1-3: Full offload videos 1-3
+Pairs 4-6: Partial offload videos 1-3
+Pairs 7-9: Onboard videos 1-3
