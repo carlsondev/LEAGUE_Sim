@@ -1,29 +1,43 @@
+## Install Dependencies
+
+```
+$ sudo apt-get install python3-catkin-tools
+$ sudo apt-get install ros-kinetic-jackal-simulator ros-kinetic-jackal-desktop ros-kinetic-jackal-navigation
+```
+
 ##  Project Setup Enviornment
 
-`source ~/ardupilot_ws/devel/setup.bash`
+### Setup ArduPilot
+1. ArduPilot Dev Env
+    1. `$ cd ~ && git clone https://github.com/ArduPilot/ardupilot.git`
+    2. `$ echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest' >> ~/.bashrc`
+2. Ardupilot Gazebo
+    1. `$ cd ~ && git clone https://github.com/ArduPilot/ardupilot_gazebo.git`
+    2. `echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
 
 
 
+### Setup Workspace
+1. `$ mkdir ~/league_ws && cd ~/league_ws`
+2. Initialize workspace: `$ catkin init`
+2. Clone `mavlink`. `mavros`, and `LEAGUE_Sim` into `src` directory
+    1. `$ cd src`
+    2. `$ git clone https://github.com/mavlink/mavlink.git`
+    3. `$ git clone https://github.com/mavlink/mavros.git`
+    4. `$ git clone https://github.com/carlsondev/LEAGUE_Sim.git`
+3. Install dependancies
+    1. `$ cd ~/league_ws/src/LEAGUE_SIM`
+    2. `$ pip3 install --user -r requirements.txt`
+4. Build workspace: `$ cd ~/league_ws && catkin build`
+5. Add setup script to bashrc: `$ echo 'source ~/league_ws/devel/setup.bash' >> ~/.bashrc`
 
-### Packages
-* `pip3 install --user -r requirements.txt`
-* `sudo apt-get install ros-kinetic-jackal-simulator ros-kinetic-jackal-desktop ros-kinetic-jackal-navigation`
 
-### Ardupilot
-
-Ardupilot_Gazebo!
-* Install Ardupilot
-    - `git clone https://github.com/ArduPilot/ardupilot.git ~/`
-    - `echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest'`
-### ROS Workspace
-* `gazebo-iris.parm`
-* `mavlink`
-* `mavros`
+Re-source bashrc
+```
+$ source ~/.bashrc
+```
 
 ## Simulation Environment Files
-
-`echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/ardupilot_ws/src/sim_proj/models' >> ~/.bashrc`
-`echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/ardupilot_gazebo/models' >> ~/.bashrc`
 
 * `launch/river.launch`: Contains the launch data for the UAVs and the Jackal UGV
 * `worlds/river.world`: River world file containing 3 UAVs 
@@ -31,10 +45,11 @@ Ardupilot_Gazebo!
     - `meshes`: Gazebo Iris UAV Meshes, same for all drones
     - `model.config`: Model information, same except for `<model><name>drone_with_camera</name></model>`
     - `model.sdf`: Model plugin information, same except for `fdm_port_in` and `fdm_port_out` in `arducopter_plugin` (difference of 10 between UAVs)
-* `gazebo-iris.parm`: Parameters file for Gazebo Iris drone (where the BATT_CAPACITY is set). Originally located in `ardupilot/Tools/autotest/default_params/gazebo-iris.parm`
+* `models.*`: Supporting models for `river.world`
+* `support_files/gazebo-iris.parm`: Parameters file for Gazebo Iris drone (where the BATT_CAPACITY is set). Originally located in `ardupilot/Tools/autotest/default_params/gazebo-iris.parm`
 
 
-## Offboard_Node Information
+## LEAGUE Sim Information
 
 ## Usage
 
