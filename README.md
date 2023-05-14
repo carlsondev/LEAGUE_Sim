@@ -17,7 +17,6 @@ Ardupilot_Gazebo!
     - `echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest'`
 ### ROS Workspace
 * `gazebo-iris.parm`
-* `iqsim`
 * `mavlink`
 * `mavros`
 
@@ -46,3 +45,8 @@ Ardupilot_Gazebo!
     - Connects to drone **0** with **partial** offloading method
     - Reads the `partial.json` file for energy and cpu workload data
     - Performs a mission for drone **0** while generating CPU and energy data, presented to the specific graph
+
+
+## Disclaimer
+
+Project Structure, models, launch files, and worlds are based on the [IQ_SIM](https://github.com/Intelligent-Quads/iq_sim.git) repo
