@@ -1,0 +1,5 @@
+dronekit
+dronekit-sitl
+numpy
+matplotlib
+pymavlink
