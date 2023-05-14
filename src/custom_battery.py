@@ -21,6 +21,7 @@ class CustomBattery(dk.Battery):
 
         super().__init__(battery.voltage, battery.current, battery.level)
 
+        # Convert battery capacity from mAh to Joules   
         self.capacity_J = self._joules(battery.voltage, battery_cap_mah)
         self._max_cap_j = 0
         

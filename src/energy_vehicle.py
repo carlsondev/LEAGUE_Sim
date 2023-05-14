@@ -4,9 +4,6 @@ from typing import Dict, List, Any, Optional, Callable
 from pymavlink.dialects.v20.ardupilotmega import MAVLink_message
 from custom_battery import CustomBattery
 from enum import Enum
-import matplotlib
-from matplotlib.axes import Axes
-from matplotlib import animation
 import os, signal
 import time
 
