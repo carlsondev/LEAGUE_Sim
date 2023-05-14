@@ -34,6 +34,16 @@ def exit_signal_handler(signal, frame):
 
 
 def wait_update_graph(test_location : Optional[Union[dk.LocationGlobalRelative, dk.LocationGlobal]], sleep_time : Optional[float]):
+    '''
+    Wait and update the graph until the vehicle reaches the test location or until the sleep time has elapsed.
+    
+
+    :param test_location: The location to test for. If the vehicle reaches this location, the graph will stop updating.
+    :type: test_location: Optional[Union[dk.LocationGlobalRelative, dk.LocationGlobal]]
+    :param sleep_time: The time to wait before stopping the graph update.
+    :type sleep_time: Optional[float]
+    '''
+
     global data_queue
 
     if sleep_time is None and test_location is None:
@@ -42,8 +52,14 @@ def wait_update_graph(test_location : Optional[Union[dk.LocationGlobalRelative, 
 
     start_time = time.time()
     while True:
+
+        # Fetch battery percentages and CPU utilization from the queue
         graph_bat_percents, graph_cpu_utils = data_queue.get(block=True)
+
+        # Update the graph
         _update_graph(graph_bat_percents, graph_cpu_utils)
+
+        # Check if the vehicle has reached the test location
         if test_location is not None:
             real_loc = (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon)
             test_loc = (test_location.lat, test_location.lon)
@@ -52,16 +68,33 @@ def wait_update_graph(test_location : Optional[Union[dk.LocationGlobalRelative, 
             if real_dist < 1.5:
                 break
 
+        # Check if the sleep time has elapsed
         if sleep_time is not None:
             if time.time() - start_time > sleep_time:
                 break
 
 def _update_queue(graph_bat_percents : np.ndarray, graph_cpu_utils : np.ndarray):
+    '''
+    Add the battery percentages and CPU utilization to the queue.
+
+    :param graph_bat_percents: The battery percentages to add to the queue, must be a value not reference
+    :type graph_bat_percents: np.ndarray
+    :param graph_cpu_utils: The CPU utilization to add to the queue, must be a value not reference
+    :type graph_cpu_utils: np.ndarray
+    '''
+
     global data_queue
     data_queue.put((graph_bat_percents, graph_cpu_utils))
 
 def _update_graph(graph_battery_percents : np.ndarray, graph_cpu_utils : np.ndarray):
+    '''
+    Update the graph with the given battery percentages and CPU utilization.
 
+    :param graph_battery_percents: The battery percentages to update the graph with
+    :type graph_battery_percents: np.ndarray
+    :param graph_cpu_utils: The CPU utilization to update the graph with
+    :type graph_cpu_utils: np.ndarray
+    '''
 
 
     global ax1, ax2, fig
@@ -75,6 +108,7 @@ def _update_graph(graph_battery_percents : np.ndarray, graph_cpu_utils : np.ndar
     batt_percents_count = len(bat_percents)
     cpu_percents_count = len(cpu_utils)
 
+    # If the graph has not been initialized yet, initialize it
     if batt_percents_count == 1 and cpu_percents_count == 1:
         plt.ion()
 
@@ -105,41 +139,46 @@ def _update_graph(graph_battery_percents : np.ndarray, graph_cpu_utils : np.ndar
         plt.show()
 
 
-    #print(f"Drawing graph with {batt_percents_count} battery points and {cpu_percents_count} cpu points")
-
-    
+    # Update the graph    
     ax1.plot(list(range(batt_percents_count)), bat_percents, color_blue)
     ax2.plot(list(range(cpu_percents_count)), cpu_utils, color_red)
-    # print(f"Last battery percent: {bat_percents[-1]}")
-    # print(f"Last cpu util: {cpu_utils[-1]}")
-    
 
-
-    #print(f"Drawing graph with {batt_percents_count} battery points and {cpu_percents_count} cpu points")
     fig.canvas.draw()
     fig.canvas.flush_events()
 
 def main(sim_data : Dict[str, Any], offloading_method : OffloadingMethod, drone_idx : int):   
+    '''
+    Main function for the simulation. Connects to the drone, sets the simulation data, and runs the simulation.
+
+    :param sim_data: The simulation data to pass to the vehicle, loaded from the JSON file
+    :type sim_data: Dict[str, Any]
+    :param offloading_method: The offloading method to use for the simulation
+    :type offloading_method: OffloadingMethod
+    :param drone_idx: The index of the drone to connect to
+    :type drone_idx: int
+    '''
 
     global vehicle 
 
     drone_address = f"127.0.0.1:145{5+drone_idx}0" # 14550, 14560, 14570, etc.
     print(f"Connecting to drone at {drone_address}")
     vehicle = dk.connect(drone_address, wait_ready=True, vehicle_class=EnergyVehicle)
+
+    # Pass JSON data to vehicle
     vehicle.set_sim_data(sim_data, offloading_method, drone_idx)
 
+    # Set method for queueing graph data
     vehicle.queue_method = _update_queue
 
-    vehicle.mode    = dk.VehicleMode("GUIDED")
 
+    # Set vehicle mode to guided and wait for the armable state
+    vehicle.mode    = dk.VehicleMode("GUIDED")
     vehicle.wait_for_armable()
 
-    # vehicle.wait_for(lambda: vehicle.home_location is not None)
-    # print(f"Home location: {vehicle.home_location}")
-
     vehicle.arm()
-    vehicle.simple_takeoff(20) # Take off to target altitude
+    vehicle.simple_takeoff(20) # Take off to 20m above ground
 
+    # Perform graph updates and simulations for 50 seconds
     wait_update_graph(None, sleep_time=50)
 
     print("Set default/target airspeed to 3")
@@ -150,14 +189,14 @@ def main(sim_data : Dict[str, Any], offloading_method : OffloadingMethod, drone_
     point1 = dk.LocationGlobalRelative(-35.361354 + offset, 149.165218 + offset, 20)
     vehicle.simple_goto(point1)
 
-    # sleep so we can see the change in map
+    # Perform graph updates and simulations until the drone reaches the first point
     wait_update_graph(point1, None)
 
     print("Going towards second point for 30 seconds (groundspeed set to 10 m/s) ...")
     point2 = dk.LocationGlobalRelative(-35.363244 - offset, 149.168801 - offset, 20)
     vehicle.simple_goto(point2, groundspeed=10)
 
-    # sleep so we can see the change in map
+    # Perform graph updates and simulations until the drone reaches the second point
     wait_update_graph(point2, None)
 
     
@@ -165,20 +204,29 @@ def main(sim_data : Dict[str, Any], offloading_method : OffloadingMethod, drone_
     print(f"Home location: {vehicle.home_location}")
     vehicle.mode = dk.VehicleMode("RTL")
     
+
+    # Perform graph updates and simulations until the drone reaches the home location (or 50 seconds)
     if vehicle.home_location is None:
         wait_update_graph(None, 50)
     else:
         wait_update_graph(vehicle.home_location, None)
 
+    # Close vehicle object before exiting script
     vehicle.close()
-
-    vehicle.print_msg_dict(False)
 
     input("Press any key to exit...")
         
 
 def validate_data_json_file(data_json_dict : Dict[str, Any]) -> bool:
+    '''
+    Validates the data JSON file to ensure that it has the correct format.
+    :param data_json_dict: The dictionary representation of the data JSON file.
+    :type: Dict[str, Any]
+    :return: True if the data JSON file is valid, False otherwise.
+    '''
 
+
+    # Validate linear regression dictionary
     def validate_lin_reg_dict(lin_reg_dict : Dict[str, Any]) -> bool:
         if "coefs" not in lin_reg_dict:
             return False
@@ -188,6 +236,7 @@ def validate_data_json_file(data_json_dict : Dict[str, Any]) -> bool:
             return False
         return True
     
+    # Validate CPU bin/data dictionary
     def validate_cpu_bin_dict(cpu_bin_dict : Dict[str, Any]) -> bool:
         if not isinstance(cpu_bin_dict, dict):
                 return False
@@ -222,15 +271,11 @@ def validate_data_json_file(data_json_dict : Dict[str, Any]) -> bool:
             
         return True
     
-    keys_present_count = 0
 
     for key, value in data_json_dict.items():
-        if validate_cpu_bin_dict(value):
-            keys_present_count += 1
-            
-    if keys_present_count < 2:
-        print("Data JSON file must include at least one pair of CPU bin data and a dictionary for all data!")
-        return False
+        if not validate_cpu_bin_dict(value):
+            print(f"CPU bin dictionary for {key} is not valid!")
+            return False
     
     return True
     
@@ -250,6 +295,8 @@ if __name__ == "__main__":
 
     off_method = OffloadingMethod.NONE
 
+    # Currently used for describing the offloading method in the graph
+    # Original goal was to index the JSON pairs
     if off_method_str not in ["onboard", "partial", "full"]:
         print(f"Offloading method {off_method_str} is not valid!")
         exit(1)
