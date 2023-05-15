@@ -1,4 +1,10 @@
+# LEAGUE Sim simulation setup
+
+Follow these steps in order
+
 ## Install Dependencies
+
+Install ROS Melodic: [ROS Melodic Install](http://wiki.ros.org/melodic/Installation/Ubuntu)
 
 ```
 sudo apt-get install python-wstool python-rosinstall-generator python-catkin-tools
@@ -65,7 +71,7 @@ Restart
 $ reboot
 ```
 
-## Simulation Environment Files
+# Simulation Environment Files
 
 * `launch/river.launch`: Contains the launch data for the UAVs and the Jackal UGV
 * `worlds/river.world`: River world file containing 3 UAVs 
@@ -77,7 +83,7 @@ $ reboot
 * `support_files/gazebo-iris.parm`: Parameters file for Gazebo Iris drone (where the BATT_CAPACITY is set). Originally located in `ardupilot/Tools/autotest/default_params/gazebo-iris.parm`
 
 
-## LEAGUE Sim Information
+# LEAGUE Sim Information
 
 ## Usage
 
