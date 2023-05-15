@@ -16,6 +16,7 @@ import matplotlib.ticker as mtick
 import matplotlib
 from queue import Queue
 import numpy as np
+from geopy import distance
 
 matplotlib.use("Qt5agg") # Use Qt4 backend for matplotlib
 
