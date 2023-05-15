@@ -1,19 +1,24 @@
 ## Install Dependencies
 
 ```
-$ sudo apt-get install python-catkin-tools
-$ sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
-$ sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect
-$ sudo pip install future pymavlink MAVProxy
+sudo apt-get install python-wstool python-rosinstall-generator python-catkin-tools
+sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
+sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect
+sudo pip install future pymavlink MAVProxy
 ```
 
 ##  Project Setup Enviornment
 
 ### Setup ArduPilot
 1. ArduPilot Dev Env
-    1. `$ cd ~ && git clone --recurse-submodules -j8 --branch Copter-4.3.3 https://github.com/ArduPilot/ardupilot.git`
-    2. `$ cd ~/ardupilot`
-    3. `$ ./Tools/environment_install/install-prereqs-ubuntu.sh`
+```
+cd ~ && git clone --recurse-submodules -j8 --branch Copter-4.3.3 https://github.com/ArduPilot/ardupilot.git
+cd ~/ardupilot
+./Tools/environment_install/install-prereqs-ubuntu.sh
+export PATH=$PATH:$HOME/ardupilot/Tools/autotest
+export PATH=/usr/lib/ccache:$PATH
+```
+
 2. Ardupilot Gazebo
     1. `$ cd ~ && git clone --recurse-submodules -j8 https://github.com/ArduPilot/ardupilot_gazebo.git`
     2. `$ echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
@@ -22,18 +27,26 @@ $ sudo pip install future pymavlink MAVProxy
 
 ### Setup Workspace
 1. `$ mkdir ~/league_ws && cd ~/league_ws`
-2. Initialize workspace: `$ mkdir src && catkin init`
-2. Clone `mavlink`. `mavros`, and `LEAGUE_Sim` into `src` directory
-    1. `$ cd src`
-    2. `$ git clone --recurse-submodules -j8 https://github.com/mavlink/mavlink.git`
-    3. `$ git clone --recurse-submodules -j8 --branch 1.15.0 https://github.com/mavlink/mavros.git`
-    4. `$ git clone https://github.com/carlsondev/LEAGUE_Sim.git`
-3. Install dependancies
+2. Initialize workspace: `$ catkin init`
+2. Install `mavlink` and `mavros` as dependencies
+```
+wstool init ~/catkin_ws/src
+
+rosinstall_generator --upstream mavros | tee /tmp/mavros.rosinstall
+rosinstall_generator mavlink | tee -a /tmp/mavros.rosinstall
+wstool merge -t src /tmp/mavros.rosinstall
+wstool update -t src
+rosdep install --from-paths src --ignore-src --rosdistro `echo $ROS_DISTRO` -y
+
+catkin build
+```
+3. `$ cd src && git clone https://github.com/carlsondev/LEAGUE_Sim.git`
+4. Install dependancies
     1. `$ cd ~/league_ws/src/LEAGUE_Sim`
     2. `$ pip3 install --user -r requirements.txt`
-4. Build workspace: `$ cd ~/league_ws && catkin build`
-5. Add setup script to bashrc: `$ echo 'source ~/league_ws/devel/setup.bash' >> ~/.bashrc`
-6. Add local models to path: `echo 'export GAZEBO_MODEL_PATH=~/league_ws/src/LEAGUE_Sim/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
+5. Build workspace: `$ cd ~/league_ws && catkin build`
+6. Add setup script to bashrc: `$ echo 'source ~/league_ws/devel/setup.bash' >> ~/.bashrc`
+7. Add local models to path: `echo 'export GAZEBO_MODEL_PATH=~/league_ws/src/LEAGUE_Sim/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
 
 
 Re-source bashrc
