@@ -3,7 +3,7 @@
 ```
 sudo apt-get install python-wstool python-rosinstall-generator python-catkin-tools
 sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
-sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect
+sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect python3-pyqt5
 sudo pip install future pymavlink MAVProxy
 ```
 
@@ -20,22 +20,28 @@ export PATH=/usr/lib/ccache:$PATH
 ```
 
 2. Ardupilot Gazebo
-    1. `$ cd ~ && git clone --recurse-submodules -j8 https://github.com/ArduPilot/ardupilot_gazebo.git`
-    2. `$ echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
+```
+cd ~ && git clone --branch dev https://github.com/khancyr/ardupilot_gazebo
+cd ardupilot_gazebo
+mkdir build
+cd build
+cmake ..
+make -j4
+sudo make install
 
-
+echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
+echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
+```
 
 ### Setup Workspace
-1. `$ mkdir ~/league_ws && cd ~/league_ws`
+1. `$ mkdir -p ~/league_ws/src && cd ~/league_ws`
 2. Initialize workspace: `$ catkin init`
 2. Install `mavlink` and `mavros` as dependencies
 ```
-wstool init ~/catkin_ws/src
-
-rosinstall_generator --upstream mavros | tee /tmp/mavros.rosinstall
-rosinstall_generator mavlink | tee -a /tmp/mavros.rosinstall
-wstool merge -t src /tmp/mavros.rosinstall
-wstool update -t src
+cd src
+git clone --recurse-submodules -j8 https://github.com/mavlink/mavlink.git
+git clone --recurse-submodules -j8 --branch 1.15.0 https://github.com/mavlink/mavros.git
+cd ~/league_ws
 rosdep install --from-paths src --ignore-src --rosdistro `echo $ROS_DISTRO` -y
 
 catkin build
