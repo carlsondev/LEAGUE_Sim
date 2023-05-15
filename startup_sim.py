@@ -10,7 +10,7 @@ if __name__ == "__main__":
         exit(1)
 
     num_drones = int(args[0])
-    if os.system("gnome-terminal -- roslaunch sim_proj river.launch") != 0:
+    if os.system("gnome-terminal -- roslaunch league_sim river.launch") != 0:
         print("Error launching river.launch")
         exit(1)
 

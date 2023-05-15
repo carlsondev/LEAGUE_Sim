@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>sim_proj</name>
+  <name>league_sim</name>
   <version>0.0.0</version>
-  <description>The sim_proj package</description>
+  <description>The league_sim package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/sim_proj</url> -->
+  <!-- <url type="website">http://wiki.ros.org/league_sim</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
