@@ -14,7 +14,7 @@ import signal
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import matplotlib
-from queue import SimpleQueue
+from queue import Queue
 import numpy as np
 
 matplotlib.use("Qt5agg") # Use Qt4 backend for matplotlib
@@ -22,7 +22,7 @@ matplotlib.use("Qt5agg") # Use Qt4 backend for matplotlib
 # HERELINK_TELEM
 
 vehicle : Optional[EnergyVehicle] = None
-data_queue : SimpleQueue = SimpleQueue()
+data_queue : Queue = Queue()
 
 ax1, ax2, fig = None, None, None
 

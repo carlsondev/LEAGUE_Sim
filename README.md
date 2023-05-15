@@ -1,32 +1,32 @@
 ## Install Dependencies
 
 ```
-$ sudo apt-get install python3-catkin-tools
-$ sudo apt-get install ros-kinetic-jackal-simulator ros-kinetic-jackal-desktop ros-kinetic-jackal-navigation
+$ sudo apt-get install python-catkin-tools
+$ sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
 ```
 
 ##  Project Setup Enviornment
 
 ### Setup ArduPilot
 1. ArduPilot Dev Env
-    1. `$ cd ~ && git clone https://github.com/ArduPilot/ardupilot.git`
+    1. `$ cd ~ && git clone --recurse-submodules -j8 --branch Copter-4.3.3 https://github.com/ArduPilot/ardupilot.git`
     2. `$ echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest' >> ~/.bashrc`
 2. Ardupilot Gazebo
-    1. `$ cd ~ && git clone https://github.com/ArduPilot/ardupilot_gazebo.git`
-    2. `echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
+    1. `$ cd ~ && git clone --recurse-submodules -j8 https://github.com/ArduPilot/ardupilot_gazebo.git`
+    2. `$ echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
 
 
 
 ### Setup Workspace
 1. `$ mkdir ~/league_ws && cd ~/league_ws`
-2. Initialize workspace: `$ catkin init`
+2. Initialize workspace: `$ mkdir src && catkin init`
 2. Clone `mavlink`. `mavros`, and `LEAGUE_Sim` into `src` directory
     1. `$ cd src`
-    2. `$ git clone https://github.com/mavlink/mavlink.git`
-    3. `$ git clone https://github.com/mavlink/mavros.git`
+    2. `$ git clone --recurse-submodules -j8 https://github.com/mavlink/mavlink.git`
+    3. `$ git clone --recurse-submodules -j8 --branch 1.15.0 https://github.com/mavlink/mavros.git`
     4. `$ git clone https://github.com/carlsondev/LEAGUE_Sim.git`
 3. Install dependancies
-    1. `$ cd ~/league_ws/src/LEAGUE_SIM`
+    1. `$ cd ~/league_ws/src/LEAGUE_Sim`
     2. `$ pip3 install --user -r requirements.txt`
 4. Build workspace: `$ cd ~/league_ws && catkin build`
 5. Add setup script to bashrc: `$ echo 'source ~/league_ws/devel/setup.bash' >> ~/.bashrc`
