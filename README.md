@@ -30,6 +30,7 @@ $ sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop r
     2. `$ pip3 install --user -r requirements.txt`
 4. Build workspace: `$ cd ~/league_ws && catkin build`
 5. Add setup script to bashrc: `$ echo 'source ~/league_ws/devel/setup.bash' >> ~/.bashrc`
+6. Add local models to path: `echo 'export GAZEBO_MODEL_PATH=~/league_ws/src/LEAGUE_Sim/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
 
 
 Re-source bashrc
