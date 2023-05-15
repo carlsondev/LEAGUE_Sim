@@ -2,7 +2,7 @@
 
 Follow these steps in order. This has been tested and worked correctly starting from a clean installation of Ubuntu 18.0.4.
 
-**Note**: Certain items need to be installed for Python 2 (pip) while others need to be installed for Python 3 (pip3). The commands below reflect this difference. Thre is no error in the choice of commands.
+**Note**: Certain items need to be installed for Python 2 (pip) while others need to be installed for Python 3 (pip3). The commands below reflect this difference. There is no error in the choice of commands.
 
 ## Install Dependencies
 
