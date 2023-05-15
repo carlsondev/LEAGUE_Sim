@@ -3,7 +3,7 @@
 ```
 sudo apt-get install python-wstool python-rosinstall-generator python-catkin-tools
 sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
-sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect python3-pyqt5
+sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect python3-pyqt5 python3-pip
 sudo pip install future pymavlink MAVProxy
 ```
 
@@ -14,9 +14,9 @@ sudo pip install future pymavlink MAVProxy
 ```
 cd ~ && git clone --recurse-submodules -j8 --branch Copter-4.3.3 https://github.com/ArduPilot/ardupilot.git
 cd ~/ardupilot
-./Tools/environment_install/install-prereqs-ubuntu.sh
-export PATH=$PATH:$HOME/ardupilot/Tools/autotest
-export PATH=/usr/lib/ccache:$PATH
+./Tools/environment_install/install-prereqs-ubuntu.sh -y
+echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest' >> ~/.bashrc
+echo 'export PATH=/usr/lib/ccache:$PATH' >> ~/.bashrc
 ```
 
 2. Ardupilot Gazebo
@@ -30,7 +30,7 @@ make -j4
 sudo make install
 
 echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
-echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
+echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc
 ```
 
 ### Setup Workspace
@@ -58,6 +58,11 @@ catkin build
 Re-source bashrc
 ```
 $ source ~/.bashrc
+```
+
+Restart
+```
+$ reboot
 ```
 
 ## Simulation Environment Files
