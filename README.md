@@ -10,7 +10,8 @@ $ sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop r
 ### Setup ArduPilot
 1. ArduPilot Dev Env
     1. `$ cd ~ && git clone --recurse-submodules -j8 --branch Copter-4.3.3 https://github.com/ArduPilot/ardupilot.git`
-    2. `$ echo 'export PATH=$PATH:$HOME/ardupilot/Tools/autotest' >> ~/.bashrc`
+    2. `$ cd ~/ardupilot`
+    3. `$ ./Tools/environment_install/install-prereqs-ubuntu.sh`
 2. Ardupilot Gazebo
     1. `$ cd ~ && git clone --recurse-submodules -j8 https://github.com/ArduPilot/ardupilot_gazebo.git`
     2. `$ echo 'export GAZEBO_MODEL_PATH=~/ardupilot_gazebo/models:$GAZEBO_MODEL_PATH' >> ~/.bashrc`
