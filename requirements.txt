@@ -3,3 +3,4 @@ dronekit-sitl
 numpy
 matplotlib
 pymavlink
+geopy
