@@ -3,6 +3,8 @@
 ```
 $ sudo apt-get install python-catkin-tools
 $ sudo apt-get install ros-melodic-jackal-simulator ros-melodic-jackal-desktop ros-melodic-jackal-navigation
+$ sudo apt-get install python-matplotlib python-serial python-wxgtk3.0 python-wxtools python-lxml python-scipy python-opencv ccache gawk python-pip python-pexpect
+$ sudo pip install future pymavlink MAVProxy
 ```
 
 ##  Project Setup Enviornment
